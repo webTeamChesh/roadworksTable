@@ -65,6 +65,7 @@ const loc = function (obj) {
       .values.value._text;
   } catch (err) {
     console.log(err);
+    return "No street name given";
   }
 };
 
