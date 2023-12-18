@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const dir = path.join(__dirname, '../public');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
