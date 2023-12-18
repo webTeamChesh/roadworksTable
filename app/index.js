@@ -80,7 +80,8 @@ app.get('/*', (req, res) => {
     .then((response) => {
       return response.text();
     })
-    .then((text) => {
+       .then((text) => {
+      let date = text.split(/\n\s*\n/)[0].split("<publicationTime>")[1].split("</publicationTime>")[0];
       let works = text.split(/\n\s*\n/).slice(1);
       let last = works.pop().split(/\n/).slice(0, -3);
       works.push(last);
@@ -90,7 +91,7 @@ app.get('/*', (req, res) => {
             JSON.parse(convert.xml2json(a, { compact: true, spaces: 4 }))
           )
       );
-      res.send(JSON.stringify(works));
+      res.send(JSON.stringify({date: date, items: works}));
     });
 });
 
