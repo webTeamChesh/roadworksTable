@@ -43,7 +43,7 @@ const Sit = function (obj) {
     obj.groupOfLocations.tpegPointLocation.point.name[0].descriptor.values.value._text;
 };
 
-app.get('/table', (req, res) => {
+app.get('/*', (req, res) => {
   fetch(url, {
     headers: {
       Authorization: 'Basic ' + btoa(`${user}:${password}`),
