@@ -23,25 +23,51 @@ app.listen(port, (error) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+const dedup = (arr) => {
+  return arr.reduce((acc, e) => {
+    if (!acc.includes(e)) {
+      acc.push(e);
+    }
+    return acc;
+  }, []);
+};
+
 const Item = function (obj) {
   let rec = obj.situation.situationRecord;
-  this.locations = Array.isArray(rec)
-    ? rec.map((e) => new Sit(e))
-    : (this.locations = [new Sit(rec)]);
-  this.startDate = rec.validity ? rec.validity.validityTimeSpecification.overallStartTime._text : '';
-  this.endDate = rec.validity ? rec.validity.validityTimeSpecification.overallEndTime._text : '';
-  //this.description = ;
-  this.impact = rec.impact ? rec.impact.delays.delaysType._text : '';
-  console.log(rec.situationRecordExtension);
-  this.responsible = rec.situationRecordExtension ? rec.situationRecordExtension.situationRecordExtended.responsibleOrganisationName: '';
-  this.url = rec.urlLink ? rec.urlLink.urlLinkAddress._text : '';
-
+  if (Array.isArray(rec)) {
+    this.locations = dedup(rec.map((e) => loc(e)));
+    this.startDate =
+      rec[0].validity.validityTimeSpecification.overallStartTime._text;
+    this.endDate =
+      rec[0].validity.validityTimeSpecification.overallEndTime._text;
+    this.description =
+      rec[0].generalPublicComment.comment.values.value[1]._text;
+    this.impact = rec[0].impact.delays.delaysType._text;
+    this.responsible =
+      rec[0].situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
+    this.url = rec[0].urlLink.urlLinkAddress._text;
+  } else {
+    this.locations = [loc(rec)];
+    this.startDate =
+      rec.validity.validityTimeSpecification.overallStartTime._text;
+    this.endDate = rec.validity.validityTimeSpecification.overallEndTime._text;
+    this.description = rec.generalPublicComment.comment.values.value[1]._text;
+    this.impact = rec.impact.delays.delaysType._text;
+    this.responsible =
+      rec.situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
+    this.url = rec.urlLink.urlLinkAddress._text;
+  }
 };
 
-const Sit = function (obj) {
-  this.location =
-    obj.groupOfLocations.tpegPointLocation.point.name[0].descriptor.values.value._text;
+const loc = function (obj) {
+  try {
+    return obj.groupOfLocations.tpegPointLocation.point.name[0].descriptor
+      .values.value._text;
+  } catch (err) {
+    console.log(err);
+  }
 };
+
 
 app.get('/*', (req, res) => {
   fetch(url, {
@@ -57,18 +83,13 @@ app.get('/*', (req, res) => {
       let works = text.split(/\n\s*\n/).slice(1);
       let last = works.pop().split(/\n/).slice(0, -3);
       works.push(last);
-      let first = new Item(
-        JSON.parse(convert.xml2json(works[0], { compact: true, spaces: 4 }))
-      );
-      let second = new Item(
-        JSON.parse(convert.xml2json(works[1], { compact: true, spaces: 4 }))
-      );
-
-      console.log(first);
-      console.log(second);
-      works = works.map((a) =>
-        JSON.parse(convert.xml2json(a, { compact: true, spaces: 4 }))
+      works = works.map(
+        (a) =>
+          new Item(
+            JSON.parse(convert.xml2json(a, { compact: true, spaces: 4 }))
+          )
       );
       res.send(JSON.stringify(works));
     });
 });
+
