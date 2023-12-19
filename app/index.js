@@ -35,7 +35,7 @@ const dedup = (arr) => {
 const Item = function (obj) {
   let rec = obj.situation.situationRecord;
   if (Array.isArray(rec)) {
-    this.locations = dedup(rec.map((e) => loc(e)));
+    this.locations = dedup(rec.map((e) => loc(e))).join(',');
     this.startDate =
       rec[0].validity.validityTimeSpecification.overallStartTime._text;
     this.endDate =
@@ -47,7 +47,7 @@ const Item = function (obj) {
       rec[0].situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
     this.url = rec[0].urlLink.urlLinkAddress._text;
   } else {
-    this.locations = [loc(rec)];
+    this.locations = loc(rec);
     this.startDate =
       rec.validity.validityTimeSpecification.overallStartTime._text;
     this.endDate = rec.validity.validityTimeSpecification.overallEndTime._text;
@@ -59,15 +59,17 @@ const Item = function (obj) {
   }
 };
 
+
 const loc = function (obj) {
   try {
     return obj.groupOfLocations.tpegPointLocation.point.name[0].descriptor
       .values.value._text;
   } catch (err) {
-    console.log(err);
-    return "No street name given";
+    console.log("No street name.");
+    return 'No street name provided';
   }
 };
+
 
 
 app.get('/*', (req, res) => {
