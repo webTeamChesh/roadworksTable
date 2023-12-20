@@ -41,7 +41,7 @@ const Item = function (obj) {
       rec[0].validity.validityTimeSpecification.overallEndTime._text;
     this.description = rec[0].generalPublicComment.comment.values.value
       .map((e) => e._text)
-      .join(',');
+      .join('^#');
     this.impact = rec[0].impact.delays.delaysType._text;
     this.responsible =
       rec[0].situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
@@ -53,7 +53,7 @@ const Item = function (obj) {
     this.endDate = rec.validity.validityTimeSpecification.overallEndTime._text;
     this.description = rec.generalPublicComment.comment.values.value
       .map((e) => e._text)
-      .join(',');
+      .join('^#');
     this.impact = rec.impact.delays.delaysType._text;
     this.responsible =
       rec.situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
