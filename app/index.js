@@ -40,8 +40,9 @@ const Item = function (obj) {
       rec[0].validity.validityTimeSpecification.overallStartTime._text;
     this.endDate =
       rec[0].validity.validityTimeSpecification.overallEndTime._text;
-    this.description =
-      rec[0].generalPublicComment.comment.values.value[1]._text;
+    this.description = rec[0].generalPublicComment.comment.values.value
+      .map((e) => e._text)
+      .join(' ');
     this.impact = rec[0].impact.delays.delaysType._text;
     this.responsible =
       rec[0].situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
@@ -51,13 +52,16 @@ const Item = function (obj) {
     this.startDate =
       rec.validity.validityTimeSpecification.overallStartTime._text;
     this.endDate = rec.validity.validityTimeSpecification.overallEndTime._text;
-    this.description = rec.generalPublicComment.comment.values.value[1]._text;
+    this.description = rec.generalPublicComment.comment.values.value
+      .map((e) => e._text)
+      .join(' ');
     this.impact = rec.impact.delays.delaysType._text;
     this.responsible =
       rec.situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
     this.url = rec.urlLink.urlLinkAddress._text;
   }
 };
+
 
 
 const loc = function (obj) {
