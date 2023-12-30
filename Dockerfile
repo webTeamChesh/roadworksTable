@@ -1,6 +1,6 @@
    
 FROM node:18-alpine
-LABEL org.opencontainers.image.source="https://github.com/<your-github-username>/<roadworksTable>"
+LABEL org.opencontainers.image.source="https://github.com/<webTeamChesh>/<roadworksTable>"
 COPY . .
 WORKDIR /app
 EXPOSE 3001
