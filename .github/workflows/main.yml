@@ -20,9 +20,9 @@ jobs:
 
     
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ghcr.io/webTeamChesh/roadworks:${{ github.run_number }}
+      run: docker build . --file Dockerfile --tag ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
     - name: Docker push
-      run: docker push ghcr.io/webTeamChesh/roadworks:${{ github.run_number }}
+      run: docker push ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
   job2:
     runs-on: ubuntu-latest
     needs: build
@@ -36,8 +36,8 @@ jobs:
         block-id: roadworks
         alias: chesheast
         project-id: website
-        image-uri: ghcr.io/webTeamChesh/roadworks:${{ github.run_number }}
+        image-uri: ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
         client-id: ${{ secrets.CLIENT_ID }}
         shared-secret: ${{ secrets.SHARED_SECRET }}
-        git-token: ${{ secrets.TOKEN }}
+        git-token: ${{ secrets.GITHUB_TOKEN }}
    
