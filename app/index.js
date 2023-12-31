@@ -13,7 +13,6 @@ const url =
 const user = 'cheshireeast';
 const password = 'Tkfdg58F]pjA';
 
-
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
