@@ -20,19 +20,27 @@ app.listen(port, (error) => {
 //app.use(express.static(dir));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
-    if (!acc.includes(e)) {
-      acc.push(e);
-    }
+    e.forEach((l) => {
+      l = l.replace(', Cheshire East', '');
+      if (l.split(' ').length === 1 && acc.some((e) => e.includes(l))) {
+        return acc;
+      }
+      if (l.length && !acc.includes(l) && !l.includes('Ward')) {
+        acc.push(l);
+      }
+    });
     return acc;
   }, []);
 };
+
 const Item = function (obj) {
   let rec = obj.situation.situationRecord;
   if (Array.isArray(rec)) {
-    this.locations = dedup(rec.map((e) => loc(e))).join(',');
+    this.locations = rec.map((e) => loc(e));
+    this.locations = dedup(this.locations).join("^#");
+    //console.log(this.locations);
     this.startDate =
       rec[0].validity.validityTimeSpecification.overallStartTime._text;
     this.endDate =
@@ -46,6 +54,15 @@ const Item = function (obj) {
     this.url = rec[0].urlLink.urlLinkAddress._text;
   } else {
     this.locations = loc(rec);
+    if (this.locations.length === 2 && this.locations[1].includes('Ward')) {
+      this.locations = 
+        `${this.locations[0].replace(
+          ', Cheshire East',
+          ''
+        )} (${this.locations[1].replace(', Cheshire East', '')})`
+      ;
+    }
+    //console.log(this.locations);
     this.startDate =
       rec.validity.validityTimeSpecification.overallStartTime._text;
     this.endDate = rec.validity.validityTimeSpecification.overallEndTime._text;
@@ -59,17 +76,27 @@ const Item = function (obj) {
   }
 };
 
-
-
 const loc = function (obj) {
   try {
-    return obj.groupOfLocations.tpegPointLocation.point.name[0].descriptor
-      .values.value._text;
+    return obj.groupOfLocations.tpegPointLocation.point.name.reduce(
+      (acc, e) => {
+        let temp = e.descriptor.values.value._text.trim();
+        if (temp === 'Cheshire East') {
+          return acc;
+        }
+        if (acc[0] && temp.startsWith(acc[0])) {
+          return [temp];
+        }
+        acc = [...acc, temp];
+        return acc;
+      },
+      []
+    );
   } catch (err) {
-    console.log("No street name.");
-    return 'No street name provided';
+    return [];
   }
 };
+
 
 
 
