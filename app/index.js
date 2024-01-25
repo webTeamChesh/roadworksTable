@@ -39,42 +39,47 @@ const Item = function (obj) {
   let rec = obj.situation.situationRecord;
   if (Array.isArray(rec)) {
     this.locations = rec.map((e) => loc(e));
-    this.locations = dedup(this.locations).join("^#");
-    //console.log(this.locations);
-    this.startDate =
-      rec[0].validity.validityTimeSpecification.overallStartTime._text;
-    this.endDate =
-      rec[0].validity.validityTimeSpecification.overallEndTime._text;
-    this.description = rec[0].generalPublicComment.comment.values.value
-      .map((e) => e._text)
-      .join('^#');
-    this.impact = rec[0].impact.delays.delaysType._text;
-    this.responsible =
-      rec[0].situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
-    this.url = rec[0].urlLink.urlLinkAddress._text;
+    this.locations = dedup(this.locations).join('^#');
+    Object.assign(this, new Details(rec[0]));
   } else {
     this.locations = loc(rec);
     if (this.locations.length === 2 && this.locations[1].includes('Ward')) {
-      this.locations = 
-        `${this.locations[0].replace(
-          ', Cheshire East',
-          ''
-        )} (${this.locations[1].replace(', Cheshire East', '')})`
-      ;
+      this.locations = `${this.locations[0].replace(
+        ', Cheshire East',
+        ''
+      )} (${this.locations[1].replace(', Cheshire East', '')})`;
     }
-    //console.log(this.locations);
-    this.startDate =
-      rec.validity.validityTimeSpecification.overallStartTime._text;
-    this.endDate = rec.validity.validityTimeSpecification.overallEndTime._text;
-    this.description = rec.generalPublicComment.comment.values.value
-      .map((e) => e._text)
-      .join('^#');
-    this.impact = rec.impact.delays.delaysType._text;
-    this.responsible =
-      rec.situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
-    this.url = rec.urlLink.urlLinkAddress._text;
+    Object.assign(this, new Details(rec));
   }
 };
+
+const cap = (str) => {
+  return `${str[0].toUpperCase()}${str.slice(1)}`;
+};
+
+const Details = function (obj) {
+  let sev = obj.severity;
+  this.severity = sev ? cap(sev._text) : '';
+  this.startDate =
+    obj.validity.validityTimeSpecification.overallStartTime._text;
+  this.endDate = obj.validity.validityTimeSpecification.overallEndTime._text;
+  this.description = obj.generalPublicComment.comment.values.value
+    .map((e) => cap(e._text))
+    .join('^#');
+  this.impact = obj.impact.delays.delaysType._text;
+  this.url = obj.urlLink.urlLinkAddress._text;
+  this.responsible =
+    obj.situationRecordExtension.situationRecordExtended.responsibleOrganisation.responsibleOrganisationName._text;
+  let man = obj.generalNetworkManagementType;
+  this.management = man ? man._text : '';
+  let ext = obj.nonGeneralPublicComment;
+  this.extra = ext ? ext.comment.values.value._text : '';
+  let cat = obj.situationRecordExtension.situationRecordExtended.worksCategory;
+  this.worksCat = cat ? cat.description._text : '';
+  let state = obj.situationRecordExtension.situationRecordExtended.worksState;
+  this.worksState = state ? state.description._text : '';
+};
+
 
 const loc = function (obj) {
   try {
