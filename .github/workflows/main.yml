@@ -24,7 +24,7 @@ jobs:
         tags: ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
       env:
         ON_PWD: ${{ secrets.ON_PWD }}
-      args: 
+      arg: 
         ON_PWD: ${{ secrets.ON_PWD }}
      
         
