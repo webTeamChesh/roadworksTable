@@ -17,8 +17,7 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-        secrets: 
-            "ON_PWD=${{ secrets.ON_PWD }}"  
+
 
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
