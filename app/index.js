@@ -11,8 +11,7 @@ const port = process.env.PORT || 3001;
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
 const user = 'cheshireeast';
-const password = process.env.ON_PWD;
-console.log(password);
+const password = 'Tkfdg58F]pjA';
 
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
