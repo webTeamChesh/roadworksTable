@@ -21,7 +21,6 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        platforms: linux/amd64,linux/arm64
         tags: ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
         secrets: "ON_PWD=${{ secrets.ON_PWD }}"  
     - name: Docker push
