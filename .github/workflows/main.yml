@@ -18,14 +18,12 @@ jobs:
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
     - name: Build the Docker image
-      uses: docker/build-push-action@v5
+
+      uses: docker/build-push-action@v3
       with:
         context: .
-        tags: ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
-      env:
-        ON_PWD: ${{ secrets.ON_PWD }}
-      arg: 
-        ON_PWD: ${{ secrets.ON_PWD }}
+        build-args: |
+          "ON_PWD=${{ secrets.ON_PWD }}"
      
         
     - name: Docker push
