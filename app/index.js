@@ -11,12 +11,12 @@ const port = process.env.PORT || 3001;
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
 const user = 'cheshireeast';
-const password = 'Tkfdg58F]pjA';
+const password = 'process.env.ON_PWD';
 
-let env = [];
-Object.keys(process.env).forEach((k) => env.push(`${k}: ${process.env[k]}`));
-env.sort();
-env.forEach((e) => console.log(e));
+//let env = [];
+//Object.keys(process.env).forEach((k) => env.push(`${k}: ${process.env[k]}`));
+//env.sort();
+//env.forEach((e) => console.log(e));
 
 
 app.listen(port, (error) => {
