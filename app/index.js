@@ -21,6 +21,7 @@ app.listen(port, (error) => {
 //app.use(express.static(dir));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
