@@ -18,7 +18,6 @@ const password = process.env.ON_PWD;
 //env.sort();
 //env.forEach((e) => console.log(e));
 
-
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
