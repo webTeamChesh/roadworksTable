@@ -1,20 +1,16 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import path from 'path';
 import bodyParser from 'body-parser';
 import convert from 'xml-js';
-import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const dir = path.join(__dirname, '../public');
 const port = process.env.PORT || 3001;
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
 const user = 'cheshireeast';
 const password = process.env.ON_PWD;
 
-//let env = [];
-//Object.keys(process.env).forEach((k) => env.push(`${k}: ${process.env[k]}`));
+// Optionally log all the environment variables.
+//let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
 //env.sort();
 //env.forEach((e) => console.log(e));
 
@@ -22,10 +18,16 @@ app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
 });
-//app.use(express.static(dir));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Helper function to make first character of string upper case.
+const cap = (str) => {
+  return `${str[0].toUpperCase()}${str.slice(1)}`;
+};
+
+// A helper function to remove unnecceary duplication.
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
@@ -41,6 +43,7 @@ const dedup = (arr) => {
   }, []);
 };
 
+// Constuctor for the object representing each item in the table.
 const Item = function (obj) {
   let rec = obj.situation.situationRecord;
   if (Array.isArray(rec)) {
@@ -59,10 +62,7 @@ const Item = function (obj) {
   }
 };
 
-const cap = (str) => {
-  return `${str[0].toUpperCase()}${str.slice(1)}`;
-};
-
+// Constructor foe the "details" part of the item.
 const Details = function (obj) {
   let sev = obj.severity;
   this.severity = sev ? cap(sev._text) : '';
@@ -86,7 +86,7 @@ const Details = function (obj) {
   this.worksState = state ? state.description._text : '';
 };
 
-
+// A function that extracts the location information from the object.
 const loc = function (obj) {
   try {
     return obj.groupOfLocations.tpegPointLocation.point.name.reduce(
@@ -108,9 +108,7 @@ const loc = function (obj) {
   }
 };
 
-
-
-
+// Route
 app.get('/*', (req, res) => {
   fetch(url, {
     headers: {
@@ -122,10 +120,13 @@ app.get('/*', (req, res) => {
       return response.text();
     })
        .then((text) => {
+      // Get the date & time of this record.
       let date = text.split(/\n\s*\n/)[0].split("<publicationTime>")[1].split("</publicationTime>")[0];
+      // Get the data from the XML file into an array.
       let works = text.split(/\n\s*\n/).slice(1);
       let last = works.pop().split(/\n/).slice(0, -3);
       works.push(last);
+      // Create and array of objects.
       works = works.map(
         (a) =>
           new Item(
