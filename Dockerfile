@@ -1,6 +1,6 @@
    
 FROM node:18-alpine
-LABEL org.opencontainers.image.source="https://github.com/<webTeamChesh>/<roadworksTable>"
+LABEL org.opencontainers.image.source="https://github.com/webTeamChesh/roadworksTable"
 ARG ON_PWD
 ENV ON_PWD ${ON_PWD}
 COPY . .
