@@ -27,7 +27,7 @@ const cap = (str) => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
 };
 
-// A helper function to remove unnecceary duplication.
+// A helper function to remove duplication.
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
@@ -120,13 +120,13 @@ app.get('/*', (req, res) => {
       return response.text();
     })
        .then((text) => {
-      // Get the date & time of this record.
+      // Get the date & time of this record
       let date = text.split(/\n\s*\n/)[0].split("<publicationTime>")[1].split("</publicationTime>")[0];
-      // Get the data from the XML file into an array.
+      // Get the data from the XML file into an array
       let works = text.split(/\n\s*\n/).slice(1);
       let last = works.pop().split(/\n/).slice(0, -3);
       works.push(last);
-      // Create and array of objects.
+      // Create and array of objects
       works = works.map(
         (a) =>
           new Item(
