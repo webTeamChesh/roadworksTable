@@ -43,7 +43,6 @@ const dedup = (arr) => {
   }, []);
 };
 
-// Constuctor for the object representing each item in the table.
 const Item = function (obj) {
   let rec = obj.situation.situationRecord;
   if (Array.isArray(rec)) {
@@ -57,7 +56,6 @@ const Item = function (obj) {
 };
 
 
-// Constructor foe the "details" part of the item.
 const Details = function (obj) {
   let sev = obj.severity;
   this.id = obj.situationRecordCreationReference
@@ -110,9 +108,6 @@ const loc = function (obj) {
   }
 };
 
-
-
-// Route
 app.get('/*', (req, res) => {
   fetch(url, {
     headers: {
@@ -143,4 +138,3 @@ app.get('/*', (req, res) => {
       res.send(JSON.stringify({ date: date, items: temp }));
     });
 });
-
