@@ -65,9 +65,15 @@ const Details = function (obj) {
   this.startDate =
     obj.validity.validityTimeSpecification.overallStartTime._text;
   this.endDate = obj.validity.validityTimeSpecification.overallEndTime._text;
+  try {
   this.description = obj.generalPublicComment.comment.values.value
     .map((e) => cap(e._text))
     .join('^#');
+  }
+  catch (err) {
+    this.description = cap(obj.generalPublicComment.comment.values.value._text);
+    console.log(this.description);
+  }
   this.impact = obj.impact.delays.delaysType._text;
   this.url = obj.urlLink.urlLinkAddress._text;
   this.responsible =
@@ -81,6 +87,7 @@ const Details = function (obj) {
   let state = obj.situationRecordExtension.situationRecordExtended.worksState;
   this.worksState = state ? state.description._text : '';
 };
+
 
 const loc = function (obj) {
   try {
