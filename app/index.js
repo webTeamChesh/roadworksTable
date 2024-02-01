@@ -51,20 +51,18 @@ const Item = function (obj) {
     this.locations = dedup(this.locations).join('^#');
     Object.assign(this, new Details(rec[0]));
   } else {
-    this.locations = loc(rec);
-    if (this.locations.length === 2 && this.locations[1].includes('Ward')) {
-      this.locations = `${this.locations[0].replace(
-        ', Cheshire East',
-        ''
-      )} (${this.locations[1].replace(', Cheshire East', '')})`;
-    }
+    this.locations = loc(rec).join('^#');
     Object.assign(this, new Details(rec));
   }
 };
 
+
 // Constructor foe the "details" part of the item.
 const Details = function (obj) {
   let sev = obj.severity;
+  this.id = obj.situationRecordCreationReference
+    ? obj.situationRecordCreationReference._text
+    : '';
   this.severity = sev ? cap(sev._text) : '';
   this.startDate =
     obj.validity.validityTimeSpecification.overallStartTime._text;
@@ -86,7 +84,6 @@ const Details = function (obj) {
   this.worksState = state ? state.description._text : '';
 };
 
-// A function that extracts the location information from the object.
 const loc = function (obj) {
   try {
     return obj.groupOfLocations.tpegPointLocation.point.name.reduce(
@@ -98,15 +95,22 @@ const loc = function (obj) {
         if (acc[0] && temp.startsWith(acc[0])) {
           return [temp];
         }
-        acc = [...acc, temp];
-        return acc;
+        return [...acc, temp];
       },
       []
     );
   } catch (err) {
-    return [];
+    let temp = obj.groupOfLocations.locationContainedInItinerary;
+    try {
+      return [temp[0].location.tpegPointLocation.point.name[0].descriptor.values
+        .value._text];
+    } catch (err) {
+      return ['None'];
+    }
   }
 };
+
+
 
 // Route
 app.get('/*', (req, res) => {
