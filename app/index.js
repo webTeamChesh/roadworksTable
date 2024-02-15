@@ -134,6 +134,7 @@ app.get('/*', (_, res) => {
     },
   })
     .then((response) => {
+      console.log(response);
       if (!response.ok) {
         throw 'No data';
       }
