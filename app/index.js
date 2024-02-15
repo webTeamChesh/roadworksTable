@@ -134,6 +134,9 @@ app.get('/*', (_, res) => {
     },
   })
     .then((response) => {
+      if (!response.ok) {
+        throw 'No data';
+      }
       return response.text();
     })
     .then((text) => {
@@ -157,7 +160,11 @@ app.get('/*', (_, res) => {
         return acc;
       }, []);
       res.send(JSON.stringify({ date: date, items: temp }));
+    })
+    .catch(err => {
+      res.status(400).send();
     });
 });
+
 
 
