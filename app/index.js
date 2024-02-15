@@ -7,7 +7,7 @@ const port = process.env.PORT || 3001;
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
 const user = 'cheshireeast';
-const password = 'Tkfdg58F]pjA';
+const password = process.env.ON_PWD;
 
 // Optionally log all the environment variables.
 //let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
