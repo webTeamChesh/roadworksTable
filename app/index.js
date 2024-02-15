@@ -135,7 +135,7 @@ app.get('/*', (_, res) => {
   })
     .then((response) => {
       console.log(response);
-      if (!response.ok) {
+      if (!response.status === 200) {
         throw 'No data';
       }
       return response.text();
