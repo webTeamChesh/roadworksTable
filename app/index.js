@@ -11,9 +11,9 @@ const password = process.env.ON_PWD;
 const council = "Cheshire East";
 
 // Optionally log all the environment variables.
-let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
-env.sort();
-env.forEach((e) => console.log(e));
+//let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
+//env.sort();
+//env.forEach((e) => console.log(e));
 
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
@@ -22,6 +22,7 @@ app.listen(port, (error) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 let cache;
 
 // Remove some unnecessary duplication.
@@ -130,40 +131,21 @@ const loc = function (obj) {
   return ['None'];
 };
 
-await fetch(url, {
-  headers: {
-    Authorization: 'Basic ' + btoa(`${user}:${password}`),
-    'Content-Type': 'application/xml; charset=utf-8',
-  },
-})
-  .then((response) => {
-    return response.text();
-  })
-  .then((text) => {
-    let date = text
-      .split(/\n\s*\n/)[0]
-      .split('<publicationTime>')[1]
-      .split('</publicationTime>')[0];
-    // Get the situations from the XML.
-    let works = text.split(/\n\s*\n/).slice(1);
-    let last = works.pop().split(/\n/).slice(0, -3);
-    works.push(last);
-    let temp = works.reduce((acc, sit) => {
-      let v = JSON.parse(convert.xml2json(sit, { compact: true, spaces: 4 }));
-      let item = new Item(v);
-      // Ignore duplicates or situations with no location info.
-      let el = acc.find((e) => e.id === item.id);
-      if (!el && item.locations !== 'None') {
-        acc.push(item);
-      }
-      return acc;
-    }, []);
-    cache = { date, items: temp };
-  });
-
-
 // Route
 app.get('/*', async (req, res) => {
+  doFetch()
+    .then(() => {
+      res.send(JSON.stringify(cache));
+    })
+    .catch((err) => {
+      if (cache) {
+        res.send(JSON.stringify(cache));
+      }
+      res.status(400).send();
+    });
+});
+
+const doFetch = async () => {
   await fetch(url, {
     headers: {
       Authorization: 'Basic ' + btoa(`${user}:${password}`),
@@ -171,9 +153,6 @@ app.get('/*', async (req, res) => {
     },
   })
     .then((response) => {
-      if (!response.ok) {
-        throw("no data");
-      }
       return response.text();
     })
     .then((text) => {
@@ -196,12 +175,7 @@ app.get('/*', async (req, res) => {
         return acc;
       }, []);
       cache = { date, items: temp };
-      res.send(JSON.stringify({ date: date, items: temp }));
-    })
-    .catch((err) => {
-      if (cache) {
-        res.send(JSON.stringify(cache));
-      }
-      res.status(400).send();
     });
-});
+};
+
+await doFetch();
