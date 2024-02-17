@@ -26,6 +26,8 @@ app.use(express.static(dir));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+let cache;
+
 // Remove some unnecessary duplication.
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
@@ -143,7 +145,7 @@ app.get('/*', (req, res) => {
   })
     .then((response) => {
       if (!response.ok) {
-        throw('No data');
+        throw 'No data';
       }
       console.log(response);
       return response.text();
@@ -157,7 +159,6 @@ app.get('/*', (req, res) => {
       let works = text.split(/\n\s*\n/).slice(1);
       let last = works.pop().split(/\n/).slice(0, -3);
       works.push(last);
-      console.log(works[0]);
       let temp = works.reduce((acc, sit) => {
         let v = JSON.parse(convert.xml2json(sit, { compact: true, spaces: 4 }));
         let item = new Item(v);
@@ -168,10 +169,13 @@ app.get('/*', (req, res) => {
         }
         return acc;
       }, []);
-      console.log(temp);
+      cache = { date, items: temp };
       res.send(JSON.stringify({ date: date, items: temp }));
     })
     .catch((err) => {
+      if (cache) {
+        res.send(JSON.stringify(cache));
+      }
       res.status(400).send();
     });
 });
