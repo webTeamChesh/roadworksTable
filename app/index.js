@@ -138,9 +138,6 @@ app.get('/*', async (req, res) => {
     },
   })
     .then((response) => {
-      if (!response.ok) {
-        throw 'No data';
-      }
       return response.text();
     })
     .then((text) => {
