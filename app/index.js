@@ -8,6 +8,7 @@ const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
 const user = 'cheshireeast';
 const password = 'Tkfdg58F]pjA';
+const council = "Cheshire East";
 
 // Optionally log all the environment variables.
 let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
@@ -29,7 +30,7 @@ let cache;
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
-      l = l.replace(`, Cheshire East`, '');
+      l = l.replace(`, ${council}`, '');
       if (!acc.includes(l)) {
         acc.push(l);
       }
