@@ -12,6 +12,8 @@ const user = process.env.user;
 const password = process.env.password;
 const council = 'Cheshire East';
 
+console.log("Added async to route.");
+
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
@@ -127,10 +129,9 @@ const loc = function (obj) {
   return ['None'];
 };
 
-// Route
-app.get('/*', (req, res) => {
+app.get('/*', async (req, res) => {
   console.log(req.path);
-  fetch(url, {
+  await fetch(url, {
     headers: {
       Authorization: 'Basic ' + btoa(`${user}:${password}`),
       'Content-Type': 'application/xml; charset=utf-8',
@@ -140,7 +141,6 @@ app.get('/*', (req, res) => {
       if (!response.ok) {
         throw 'No data';
       }
-      console.log(response);
       return response.text();
     })
     .then((text) => {
