@@ -118,9 +118,15 @@ const loc = function (obj) {
   let itinerary = obj.groupOfLocations.locationContainedInItinerary;
   if (itinerary) {
     let point = itinerary[0].location.tpegPointLocation.point.name;
-    return [
-      `${point[0].descriptor.values.value._text}, ${point[2].descriptor.values.value._text.replace("Ward", '').trim()}`,
-    ];
+    return point
+      ? [
+          `${
+            point[0].descriptor.values.value._text
+          }, ${point[2].descriptor.values.value._text
+            .replace('Ward', '')
+            .trim()}`,
+        ]
+      : ['None'];
   }
   return ['None'];
 };
