@@ -129,6 +129,40 @@ const loc = function (obj) {
   return ['None'];
 };
 
+await fetch(url, {
+  headers: {
+    Authorization: 'Basic ' + btoa(`${user}:${password}`),
+    'Content-Type': 'application/xml; charset=utf-8',
+  },
+})
+  .then((response) => {
+    return response.text();
+  })
+  .then((text) => {
+    let date = text
+      .split(/\n\s*\n/)[0]
+      .split('<publicationTime>')[1]
+      .split('</publicationTime>')[0];
+    // Get the situations from the XML.
+    let works = text.split(/\n\s*\n/).slice(1);
+    let last = works.pop().split(/\n/).slice(0, -3);
+    works.push(last);
+    let temp = works.reduce((acc, sit) => {
+      let v = JSON.parse(convert.xml2json(sit, { compact: true, spaces: 4 }));
+      let item = new Item(v);
+      // Ignore duplicates or situations with no location info.
+      let el = acc.find((e) => e.id === item.id);
+      if (!el && item.locations !== 'None') {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+    cache = { date, items: temp };
+  });
+
+console.log(cache);
+
+// Route
 app.get('/*', async (req, res) => {
   console.log(req.path);
   await fetch(url, {
