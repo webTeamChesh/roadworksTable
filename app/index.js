@@ -23,8 +23,6 @@ app.listen(port, (error) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-let cache;
-
 // Remove some unnecessary duplication.
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
@@ -134,11 +132,14 @@ const loc = function (obj) {
 // Route
 app.get('/*', async (req, res) => {
   doFetch()
-    .then(() => {
-      res.send(JSON.stringify(cache));
+    .then((data) => {
+      console.log("Sending live data.");
+      res.send(JSON.stringify(data));
     })
     .catch((err) => {
+      // Try falling back to cached data.
       if (cache) {
+        console.log("Sending cached data.");
         res.send(JSON.stringify(cache));
       }
       res.status(400).send();
@@ -146,7 +147,7 @@ app.get('/*', async (req, res) => {
 });
 
 const doFetch = async () => {
-  await fetch(url, {
+  let res = await fetch(url, {
     headers: {
       Authorization: 'Basic ' + btoa(`${user}:${password}`),
       'Content-Type': 'application/xml; charset=utf-8',
@@ -174,8 +175,10 @@ const doFetch = async () => {
         }
         return acc;
       }, []);
-      cache = { date, items: temp };
+      return { date, items: temp };
     });
+  return res ;
 };
 
-await doFetch();
+let cache = await doFetch();
+console.log(`Cached data at ${new Date(cache.date).toLocaleString('en-GB')}`);
