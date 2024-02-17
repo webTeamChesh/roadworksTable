@@ -1,33 +1,35 @@
-'use strict';
 import express from 'express';
 import fetch from 'node-fetch';
 import bodyParser from 'body-parser';
 import convert from 'xml-js';
 const app = express();
 const port = process.env.PORT || 3001;
+const url =
+  'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
+const user = 'cheshireeast';
+const password = 'Tkfdg58F]pjA';
 
-//Change these to reflect the details of your account.
-const url = process.env.url;
-const user = process.env.user;
-const password = process.env.password;
-const council = 'Cheshire East';
-
-console.log("Added async to route.");
+// Optionally log all the environment variables.
+let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
+env.sort();
+env.forEach((e) => console.log(e));
 
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
 });
-//app.use(express.static(dir));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
 let cache;
 
 // Remove some unnecessary duplication.
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
-      l = l.replace(`, ${council}`, '');
+      l = l.replace(`, Chesire East`, '');
       if (!acc.includes(l)) {
         acc.push(l);
       }
