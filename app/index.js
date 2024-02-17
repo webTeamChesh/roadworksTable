@@ -1,24 +1,28 @@
+'use strict';
 import express from 'express';
 import fetch from 'node-fetch';
+import path from 'path';
 import bodyParser from 'body-parser';
 import convert from 'xml-js';
-const app = express();
-const port = process.env.PORT || 3001;
-const url =
-  'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
-const user = 'cheshireeast';
-const password = process.env.ON_PWD;
+import { fileURLToPath } from 'url';
+import {} from 'dotenv/config';
 
-// Optionally log all the environment variables.
-//let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
-//env.sort();
-//env.forEach((e) => console.log(e));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+const dir = path.join(__dirname, '../public');
+const port = process.env.PORT || 3001;
+
+//Change these to reflect the details of your account.
+const url = process.env.url;
+const user = process.env.user;
+const password = process.env.password;
+const council = 'Cheshire East';
 
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
 });
-
+app.use(express.static(dir));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -26,7 +30,7 @@ app.use(bodyParser.json());
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
-      l = l.replace(', Cheshire East', '');
+      l = l.replace(`, ${council}`, '');
       if (!acc.includes(l)) {
         acc.push(l);
       }
@@ -38,10 +42,7 @@ const dedup = (arr) => {
 // Ignore description items that are a single word.
 const dedupDesc = (arr) => {
   return arr.reduce((acc, e) => {
-    if (e.split(' ').length === 1 || e.includes('scheduled')) {
-      return acc;
-    }
-    return [...acc, initialCap(e)];
+    return e.split(' ').length === 1 ? acc : [...acc, initialCap(e)];
   }, []);
 };
 
@@ -75,7 +76,7 @@ const Details = function (obj) {
   let comment = obj.generalPublicComment.comment.values.value;
   if (Array.isArray(comment)) {
     this.description = dedupDesc(comment.map((e) => initialCap(e._text))).join(
-      '^#'
+      '^#',
     );
   } else {
     this.description = initialCap(comment._text);
@@ -100,12 +101,12 @@ const loc = function (obj) {
   if (tpeg && tpeg.point.name) {
     return tpeg.point.name.reduce((acc, e) => {
       let temp = e.descriptor.values.value._text.trim();
-      if (temp === 'Cheshire East') {
+      if (temp === council) {
         return acc;
       }
       if (temp.includes('Ward')) {
         if (!acc[acc.length - 1].includes(',')) {
-          acc[acc.length - 1] += `, ${temp.replace("Ward", '').trim()}`;
+          acc[acc.length - 1] += `, ${temp.replace('Ward', '').trim()}`;
         }
         return acc;
       }
@@ -140,14 +141,12 @@ app.get('/*', (_, res) => {
     },
   })
     .then((response) => {
-      console.log(response);
-      if (!response.status === 200) {
-        throw 'No data';
+      if (!response.ok) {
+        throw('No data');
       }
       return response.text();
     })
     .then((text) => {
-      // Get the timestamp of the data.
       let date = text
         .split(/\n\s*\n/)[0]
         .split('<publicationTime>')[1]
@@ -168,10 +167,7 @@ app.get('/*', (_, res) => {
       }, []);
       res.send(JSON.stringify({ date: date, items: temp }));
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(400).send();
     });
 });
-
-
-
