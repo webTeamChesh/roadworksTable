@@ -22,8 +22,6 @@ app.listen(port, (error) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-
 let cache;
 
 // Remove some unnecessary duplication.
@@ -163,11 +161,9 @@ await fetch(url, {
     cache = { date, items: temp };
   });
 
-console.log(cache);
 
 // Route
 app.get('/*', async (req, res) => {
-  console.log(req.path);
   await fetch(url, {
     headers: {
       Authorization: 'Basic ' + btoa(`${user}:${password}`),
@@ -175,6 +171,9 @@ app.get('/*', async (req, res) => {
     },
   })
     .then((response) => {
+      if (!response.ok) {
+        throw("no data");
+      }
       return response.text();
     })
     .then((text) => {
