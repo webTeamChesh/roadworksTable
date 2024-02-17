@@ -1,15 +1,9 @@
 'use strict';
 import express from 'express';
 import fetch from 'node-fetch';
-import path from 'path';
 import bodyParser from 'body-parser';
 import convert from 'xml-js';
-import { fileURLToPath } from 'url';
-//import {} from 'dotenv/config';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const dir = path.join(__dirname, '../public');
 const port = process.env.PORT || 3001;
 
 //Change these to reflect the details of your account.
@@ -22,10 +16,9 @@ app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
   else console.log(error);
 });
-app.use(express.static(dir));
+//app.use(express.static(dir));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 let cache;
 
 // Remove some unnecessary duplication.
