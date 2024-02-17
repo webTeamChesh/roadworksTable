@@ -145,6 +145,7 @@ app.get('/*', (req, res) => {
       if (!response.ok) {
         throw('No data');
       }
+      console.log(response);
       return response.text();
     })
     .then((text) => {
@@ -156,6 +157,7 @@ app.get('/*', (req, res) => {
       let works = text.split(/\n\s*\n/).slice(1);
       let last = works.pop().split(/\n/).slice(0, -3);
       works.push(last);
+      console.log(works[0]);
       let temp = works.reduce((acc, sit) => {
         let v = JSON.parse(convert.xml2json(sit, { compact: true, spaces: 4 }));
         let item = new Item(v);
@@ -166,6 +168,7 @@ app.get('/*', (req, res) => {
         }
         return acc;
       }, []);
+      console.log(temp);
       res.send(JSON.stringify({ date: date, items: temp }));
     })
     .catch((err) => {
