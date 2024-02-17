@@ -161,6 +161,8 @@ const doFetch = async () => {
         .split(/\n\s*\n/)[0]
         .split('<publicationTime>')[1]
         .split('</publicationTime>')[0];
+      if (cache) console.log(`Cache: ${cache.date}`);
+      console.log(`Data updated: ${date}`);
       if (cache && cache.date === date) {
         console.log('Using cache.');
         return cache;
