@@ -29,7 +29,7 @@ let cache;
 const dedup = (arr) => {
   return arr.reduce((acc, e) => {
     e.forEach((l) => {
-      l = l.replace(`, Chesire East`, '');
+      l = l.replace(`, Cheshire East`, '');
       if (!acc.includes(l)) {
         acc.push(l);
       }
