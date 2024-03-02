@@ -11,9 +11,9 @@ const password = process.env.ON_PWD;
 const council = "Cheshire East";
 
 // Optionally log all the environment variables.
-//let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
-//env.sort();
-//env.forEach((e) => console.log(e));
+let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
+env.sort();
+env.forEach((e) => console.log(e));
 
 app.listen(port, (error) => {
   if (!error) console.log(`Server running on port ${port}`);
@@ -96,9 +96,9 @@ const Details = function (obj) {
 
 // Helper function to get location information.
 const loc = function (obj) {
-  let tpeg = obj.groupOfLocations.tpegPointLocation;
-  if (tpeg && tpeg.point.name) {
-    return tpeg.point.name.reduce((acc, e) => {
+  let tpeg = obj.groupOfLocations;
+  if (tpeg && tpeg.groupOfLocations && tpeg.groupOfLocations.point.name) {
+    return tpeg.groupOfLocations.point.name.reduce((acc, e) => {
       let temp = e.descriptor.values.value._text.trim();
       if (temp === council) {
         return acc;
@@ -115,9 +115,9 @@ const loc = function (obj) {
       return [...acc, temp];
     }, []);
   }
-  let itinerary = obj.groupOfLocations.locationContainedInItinerary;
-  if (itinerary) {
-    let point = itinerary[0].location.tpegPointLocation.point.name;
+  let itinerary = obj.groupOfLocations;
+  if (itinerary && itinerary.locationContainedInItinerary) {
+    let point = itinerary.locationContainedInItinerary[0].location.tpegPointLocation.point.name;
     return point
       ? [
           `${
