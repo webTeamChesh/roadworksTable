@@ -12,6 +12,22 @@ const user = 'cheshireeast';
 const password = process.env.ON_PWD;
 const council = "Cheshire East";
 
+async function sendEmail(error) {
+  const body = {
+    to: 'tranter.m@sky.com',
+    subject: 'Error on roadworks Block.',
+    text: error,
+  };
+
+  await fetch('https://my-emailer.onrender.com/send', {
+    method: 'post',
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+  }).then((resp) => {
+    return resp.ok;
+  });
+}
+
 
 // Optionally log all the environment variables.
 let env = Object.keys(process.env).map(k => `${k}: ${process.env[k]}`);
@@ -141,7 +157,7 @@ app.get('/*', async (req, res) => {
       res.send(JSON.stringify(data));
     })
     .catch((err) => {
-      // Try falling back to cached data.
+      sendEmail(err);
       if (cache) {
         res.send(JSON.stringify(cache));
       }
