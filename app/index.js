@@ -176,10 +176,10 @@ const doFetch = async () => {
       return response.text();
     })
     .then((text) => {
-      let date = text
-        .split(/\n\s*\n/)[0]
-        .split('<publicationTime>')[1]
-        .split('</publicationTime>')[0];
+      let data = JSON.parse(
+        convert.xml2json(text, { compact: true, spaces: 4 }),
+      )['SOAP-ENV:Envelope']['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
+      let date = data.publicationTime._text; 
       if (cache) console.log(`Cache: ${cache.date}`);
       console.log(`Data updated: ${date}`);
       if (cache && cache.date === date) {
@@ -187,12 +187,9 @@ const doFetch = async () => {
         return cache;
       }
       // Get the situations from the XML.
-      let works = text.split(/\n\s*\n/).slice(1);
-      let last = works.pop().split(/\n/).slice(0, -3);
-      works.push(last);
-      let temp = works.reduce((acc, sit) => {
-        let v = JSON.parse(convert.xml2json(sit, { compact: true, spaces: 4 }));
-        let item = new Item(v);
+      let situations = data.situation;
+      let temp = situations.reduce((acc, sit) => {
+        let item = new Item(sit);
         // Ignore duplicates or situations with no location info.
         let el = acc.find((e) => e.id === item.id);
         if (!el && item.locations !== 'None') {
