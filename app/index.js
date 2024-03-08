@@ -176,9 +176,16 @@ const doFetch = async () => {
       return response.text();
     })
     .then((text) => {
-      let data = JSON.parse(
-        convert.xml2json(text, { compact: true, spaces: 4 }),
-      )['SOAP-ENV:Envelope']['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
+      let data;
+      try {
+        data = JSON.parse(
+          convert.xml2json(text, { compact: true, spaces: 4 }),
+        )['SOAP-ENV:Envelope']['SOAP-ENV:Body'].d2LogicalModel
+          .payloadPublication;
+      } catch (err) {
+        sendEmail(err);
+      }
+
       let date = data.publicationTime._text; 
       if (cache) console.log(`Cache: ${cache.date}`);
       console.log(`Data updated: ${date}`);
