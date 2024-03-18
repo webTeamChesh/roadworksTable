@@ -10,7 +10,8 @@ const council = "Cheshire East";
 
 // Get the mongo password from the client secret.
 const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[0].slice(16);
-
+console.log(process.env.CONTENSIS_CLIENT_SECRET);
+console.log(mongoPwd);
 // Schema & model
 const authSchema = new mongoose.Schema({
   pwd: {
@@ -31,7 +32,7 @@ const mongoString = `mongodb+srv://marktranter:${mongoPwd}@cluster0.7moof0m.mong
 mongoose.connect(mongoString);
 const db = mongoose.connection;
 db.on('error', (error) => {
-  console.log(error);
+  console.log(error.reason.type);
 });
 
 // To be populated from mongo.
