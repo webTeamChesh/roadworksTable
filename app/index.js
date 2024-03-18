@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import convert from 'xml-js';
 import cors from 'cors';
 
+console.log(process.env.CLIENT_SECRET);
+
 const port = process.env.PORT || 3001;
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
