@@ -5,10 +5,7 @@ import convert from 'xml-js';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-
 const port = process.env.PORT || 3001;
-const url =
-  'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
 const council = "Cheshire East";
 
 // Get the mongo password from the client secret.
