@@ -32,7 +32,7 @@ const mongoString = `mongodb+srv://marktranter:${mongoPwd}@cluster0.7moof0m.mong
 mongoose.connect(mongoString);
 const db = mongoose.connection;
 db.on('error', (error) => {
-  console.log(error.reason.type);
+  console.log("Mongoose error.");
 });
 
 // To be populated from mongo.
@@ -44,6 +44,7 @@ db.once('connected', () => {
   console.log('Database connected');
   Auth.findOne({})
     .then((auth) => {
+      console.log(auth);
       password = auth.pwd;
       user = auth.user;
       url = `https://datacloud.one.network/?app_key=${auth.api}`;
