@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import convert from 'xml-js';
 import cors from 'cors';
 
-console.log(process.env.CLIENT_SECRET);
+console.log(process.env.CONTENSIS_CLIENT_SECRET);
 
 const port = process.env.PORT || 3001;
 const url =
