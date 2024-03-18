@@ -20,8 +20,7 @@ jobs:
       with:
         context: .
         tags: ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
-        build-args: |
-          "ON_PWD=${{ secrets.ON_PWD }}"
+
     - name: Docker push
       run: docker push ghcr.io/webteamchesh/roadworks:${{ github.run_number }}
   job2:
