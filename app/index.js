@@ -10,8 +10,7 @@ const council = "Cheshire East";
 
 // Get the mongo password from the client secret.
 const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[0].slice(16);
-console.log(process.env.CONTENSIS_CLIENT_SECRET);
-console.log(mongoPwd);
+
 // Schema & model
 const authSchema = new mongoose.Schema({
   pwd: {
@@ -44,7 +43,6 @@ db.once('connected', () => {
   console.log('Database connected');
   Auth.findOne({})
     .then((auth) => {
-      console.log(auth);
       password = auth.pwd;
       user = auth.user;
       url = `https://datacloud.one.network/?app_key=${auth.api}`;
