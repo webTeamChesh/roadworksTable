@@ -3,15 +3,66 @@ import fetch from 'node-fetch';
 import bodyParser from 'body-parser';
 import convert from 'xml-js';
 import cors from 'cors';
+import mongoose from 'mongoose';
 
-console.log(process.env.CONTENSIS_CLIENT_SECRET);
 
 const port = process.env.PORT || 3001;
 const url =
   'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81';
-const user = 'cheshireeast';
-const password = process.env.ON_PWD;
 const council = "Cheshire East";
+
+// Get the mongo password from the client secret.
+const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[0].slice(16);
+
+// Schema & model
+const authSchema = new mongoose.Schema({
+  pwd: {
+    required: true,
+    type: String,
+  },
+  api: {
+    type: String,
+  },
+  user: {
+    type: String,
+  },
+});
+const Auth = mongoose.model('Auth', authSchema);
+
+// Mongo
+const mongoString = `mongodb+srv://marktranter:${mongoPwd}@cluster0.7moof0m.mongodb.net/`;
+mongoose.connect(mongoString);
+const db = mongoose.connection;
+db.on('error', (error) => {
+  console.log(error);
+});
+
+// To be populated from mongo.
+let url;
+let password;
+let user;
+
+db.once('connected', () => {
+  console.log('Database connected');
+  Auth.findOne({})
+    .then((auth) => {
+      password = auth.pwd;
+      user = auth.user;
+      url = `https://datacloud.one.network/?app_key=${auth.api}`;
+    })
+    .then(() => {
+      app.listen(port, (error) => {
+        if (!error) {
+          console.log(`Server running on port ${port}`);
+          //sendEmail(new Date().toLocaleString('en-GB'));
+        } else {
+          console.log(error);
+        }
+      });
+    });
+});
+
+
 
 const app = express();
 app.use(cors());
@@ -190,15 +241,6 @@ const Details = function (obj) {
       ._text || '';
 };
 
-// Start server
-app.listen(port, (error) => {
-  if (!error) {
-    console.log(`Server running on port ${port}`);
-    //sendEmail(new Date().toLocaleString('en-GB'));
-  } else {
-    console.log(error);
-  }
-});
 
 // Route
 app.get('/*', (_, res) => {
