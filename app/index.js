@@ -15,7 +15,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(dir));
 
 // Declare the cache.
 let cache;
