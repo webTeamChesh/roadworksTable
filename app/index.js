@@ -25,9 +25,9 @@ const authSchema = new mongoose.Schema({
   },
 });
 const Auth = mongoose.model('Auth', authSchema);
-const mongoPort = "127.0.0.1:27017
+
 // Mongo
-const mongoString = `mongodb+srv://${mongoPort}/marktranter:${mongoPwd}@cluster0.7moof0m.mongodb.net/`;
+const mongoString = `mongodb+srv://marktranter:${mongoPwd}@cluster0.7moof0m.mongodb.net/`;
 mongoose.connect(mongoString);
 const db = mongoose.connection;
 db.on('error', (error) => {
@@ -43,6 +43,7 @@ db.once('connected', () => {
   console.log('Database connected');
   Auth.findOne({})
     .then((auth) => {
+      console.log(auth);
       password = auth.pwd;
       user = auth.user;
       url = `https://datacloud.one.network/?app_key=${auth.api}`;
