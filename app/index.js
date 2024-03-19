@@ -43,7 +43,7 @@ db.once('connected', () => {
   console.log('Database connected');
   Auth.findOne({})
     .then((auth) => {
-      console.log(auth);
+      //console.log(auth);
       password = auth.pwd;
       user = auth.user;
       url = `https://datacloud.one.network/?app_key=${auth.api}`;
