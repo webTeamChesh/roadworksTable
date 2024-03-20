@@ -11,6 +11,7 @@ const council = "Cheshire East";
 
 // Get the mongo password from the client secret.
 const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[0].slice(16);
+console.log(mongoPwd);
 
 // Schemas & models
 const emailSchema = new mongoose.Schema({
