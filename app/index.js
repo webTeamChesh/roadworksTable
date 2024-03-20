@@ -41,7 +41,7 @@ let user;
 
 db.once('connected', () => {
   console.log('Database connected');
-  Auth.findOne({})
+    Auth.findOne({_id: "65f847f55e20aec8afd5c5f6"})
     .then((auth) => {
       //console.log(auth);
       password = auth.pwd;
@@ -166,7 +166,7 @@ const loc = function (obj) {
       if (text === council) {
         return acc;
       }
-      if (text.includes('Ward')) {
+      if (text.includes('Ward') && acc.length) {
         if (!acc[acc.length - 1].includes(',')) {
           acc[acc.length - 1] += `, ${text.replace('Ward', '').trim()}`;
         }
