@@ -130,13 +130,11 @@ const doFetch = (res) => {
     })
     .then((text) => {
       let data;
-      try {
+      
         data = JSON.parse(convert.xml2json(text, { compact: true, spaces: 4 }))[
           'SOAP-ENV:Envelope'
         ]['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
-      } catch (err) {
-        sendEmail(err, res);
-      }
+     
       let date = data.publicationTime._text;
       if (cache && cache.date === date) {
         console.log('Using cache.');
@@ -240,5 +238,11 @@ const Details = function (obj) {
 
 // Route
 app.get('/*', (_, res) => {
-  doFetch(res);
+  try {
+    doFetch(res);
+  } catch (err) {
+    sendEmail(err, res);
+    res.status(404).send();
+  }
 });
+
