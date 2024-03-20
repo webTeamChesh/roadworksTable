@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import convert from 'xml-js';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import nodemailer from 'nodemailer';
 
 const port = process.env.PORT || 3001;
 const council = "Cheshire East";
@@ -11,7 +12,20 @@ const council = "Cheshire East";
 // Get the mongo password from the client secret.
 const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[0].slice(16);
 
-// Schema & model
+// Schemas & models
+const emailSchema = new mongoose.Schema({
+  EMAIL: {
+    type: String,
+  },
+  TO: {
+    type: String,
+  },
+  MY_PWD: {
+    type: String,
+  },
+});
+const Email = mongoose.model('Email', emailSchema);
+
 const authSchema = new mongoose.Schema({
   pwd: {
     required: true,
@@ -35,24 +49,43 @@ db.on('error', (error) => {
 });
 
 // To be populated from mongo.
-let url;
+let EMAIL;
+let MY_PWD;
+let TO;
 let password;
+let transporter;
+let url;
 let user;
 
 db.once('connected', () => {
   console.log('Database connected');
-    Auth.findOne({_id: "65f847f55e20aec8afd5c5f6"})
-    .then((auth) => {
-      //console.log(auth);
-      password = auth.pwd;
-      user = auth.user;
-      url = `https://datacloud.one.network/?app_key=${auth.api}`;
+  Email.findOne({ _id: '65faa6f9ae58972682ad57a7' })
+    .then((user) => {
+      EMAIL = user.EMAIL;
+      MY_PWD = user.MY_PWD;
+      TO = user.TO;
+    })
+    .then(() => {
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: EMAIL,
+          pass: MY_PWD,
+        },
+      });
+      sendEmail(transporter, new Date().toLocaleString('en-GB'), 'Server up.');
+    })
+    .then(() => {
+      Auth.findOne({ _id: '65f847f55e20aec8afd5c5f6' }).then((auth) => {
+        password = auth.pwd;
+        user = auth.user;
+        url = `https://datacloud.one.network/?app_key=${auth.api}`;
+      });
     })
     .then(() => {
       app.listen(port, (error) => {
         if (!error) {
           console.log(`Server running on port ${port}`);
-          //sendEmail(new Date().toLocaleString('en-GB'));
         } else {
           console.log(error);
         }
@@ -241,7 +274,7 @@ app.get('/*', (_, res) => {
   try {
     doFetch(res);
   } catch (err) {
-    sendEmail(err, res);
+    sendEmail(transporter, new Date().toLocaleString('en-GB'), err);
     res.status(404).send();
   }
 });
