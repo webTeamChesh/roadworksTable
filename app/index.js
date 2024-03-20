@@ -107,22 +107,17 @@ let cache;
 //env.forEach((e) => console.log(e));
 
 // Functions
-function sendEmail(error, res = undefined) {
-  const body = {
-    auth: process.env.alias,
-    subject: 'One Network - render.com.',
-    text: error,
-  };
-  fetch('https://my-emailer.onrender.com/send', {
-    method: 'post',
-    body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json' },
-  }).then((resp) => {
-    if (res) {
-      res.status(400).send();
+const sendEmail = (transporter, subject, text) => {
+  const mailOptions = { from: EMAIL, to: TO, subject, text };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
     }
   });
-}
+};
+
 
 // Flatten & remove some unnecessary duplication.
 const dedup = (arr) => {
