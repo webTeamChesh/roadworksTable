@@ -119,7 +119,6 @@ const sendEmail = (transporter, subject, text) => {
   });
 };
 
-
 // Flatten & remove some unnecessary duplication.
 const dedup = (arr) => {
   return arr.flat().reduce((acc, l) => {
