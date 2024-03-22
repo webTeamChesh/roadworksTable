@@ -12,7 +12,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dir = path.join(__dirname, '../public');
 const port = process.env.PORT || 3001;
 const app = express();
-
 // Get the mongo password from the client secret.
 const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[1].slice(16);
 
