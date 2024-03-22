@@ -9,7 +9,6 @@
     <%- reachdeck %>
     <%- head_end %>
     <style>
-        /* Tabs - increased accessibility */
         .text-danger {
           color: #a51d2b;
         }
@@ -19,108 +18,84 @@
           border-color: #4b5458 #4b5458 #fff;
           margin-bottom: 0;
         }
-
         .nav-tabs .nav-link {
           border: 2px solid transparent;
         }
-
         .nav-tabs {
           border-bottom: 2px solid #4b5458;
         }
-
         .nav-link {
           color: #0248b1;
         }
-
-        /* search input */
         #contentTypeSearchBtn,
         #contentTypeSearchInput {
           border: 2px solid #4b5458;
         }
-
-        /* Pagination */
         .page-item.disabled .page-link {
           color: #555c62;
           border: 2px solid #4b5458;
         }
-
         .page-link {
           color: #0248b1;
           border: 2px solid #4b5458;
           margin: 0 22px 22px 0;
         }
-
         .date .page-link {
           color: #0248b1;
           border: 2px solid #4b5458;
           margin: 0;
         }
-
         .page-item button {
           min-width: 3em;
         }
-
         table {
           width: 100%;
         }
-
         .arrows {
           max-width: 1rem;
         }
-
         ul {
           padding-left: 0.5rem;
         }
-
         button {
           color: Black;
         }
-
         .black {
           color: Black !important;
         }
-
         .entryUpIcon {
           position: relative;
           top: -0.5rem;
         }
-
         .entryDownIcon {
           position: relative;
           top: 0.35rem;
           right: 1rem;
         }
-
         #upstartDate {
           color: Black;
         }
-
         #description {
           width: 25% !important;
         }
-
         td {
           width: 7rem;
           vertical-align: top;
           padding-top: 0.5rem;
         }
-
         @supports (-webkit-appearance: none) {
           .entryUpIcon {
             top: -0.4rem;
           }
-
           .entryDownIcon {
             bottom: -0.3rem;
             right: 1rem;
           }
         }
-
         @supports (-moz-appearance: none) {
           .entryUpIcon {
             top: -0.6rem;
           }
-
           .entryDownIcon {
             bottom: -0.3rem;
             right: 0.77rem;
@@ -133,13 +108,192 @@
     <%- breadcrumb %>
     <div class="container mt-3">
       <div class="row">
-        <div class="col-lg-8">
-          <div class="cec-main-col-width">
-            <h1><%= h1 %></h1>
-          </div>
+        <div class="cec-main-col-width">
+          <h1><%= h1 %></h1>
+          <p>
+            Our
+            <a href="https://twitter.com/CECHighways">Twitter feed</a>
+            will cover emergency or <strong>unplanned</strong> disruption that we are
+            aware of.
+          </p>
+          <p>
+            You can view current and upcoming <strong>planned</strong> roadworks, road
+            closures and other traffic disruptions in Cheshire East on the map or table
+            below.
+          </p>
+          <p>
+            There are dedicated web pages for some road closures and other
+            <a href="#related">programmes of work impacting the highway</a>.
+          </p>
         </div>
       </div>
       <div id="app" class="mt-3"><%- html %></div>
+      <h2>How we let you know about upcoming roadworks</h2>
+      <p>You can find out about planned roadworks through the One Network site.</p>
+      <p>
+        We tell all road users about planned closure dates and times by using static
+        message boards, variable message boards and information posted on our website.
+        We also contact residents and business that fall within the closure to let
+        them know as much information as possible.
+      </p>
+      <p>We cannot give advanced notice for unplanned work such as emergencies.</p>
+      <h2>How we decide when to carry out work</h2>
+      <p>
+        We try to keep disruption to a minimum when planning work. We think about the
+        location and type of work when deciding when is best to do repairs. We try to
+        leave repairs to major roads until the school holidays if possible.
+      </p>
+      <h2>How to gain access through a road closure</h2>
+      <p>
+        We will allow access to residents and businesses whose properties fall within
+        the limits of a road closure as long as it is safe.&nbsp; You may sometimes
+        have to wait or use the diversion route instead.
+      </p>
+      <p>
+        If you need access through a closure you will be asked to say where you are
+        going. We use &lsquo;business as usual&rsquo; signs where possible.
+      </p>
+      <p>
+        We tell the emergency services about all closures on our network, and we allow
+        them access.
+      </p>
+      <p>
+        We use our permit scheme conditions to limit the time of day works are carried
+        out, or to extend the time to reduce the length of the closure.
+      </p>
+      <h2>How we decide on diversion routes</h2>
+      <p>
+        We choose the route as part of our strategic traffic management plan.&nbsp; We
+        must use roads of a similar designated level or higher to allow all road users
+        to travel along the signed diversion. For example, we must divert traffic from
+        an A class road onto other A class roads, but we can divert B class roads onto
+        both A and B class roads. This can sometimes result in lengthy diversions.
+      </p>
+      <h2 id="related">Related pages</h2>
+      <div id="GenericList_wrapper" class="sys_generic_list-control">
+        <div id="GenericList_List" class="sys_datarepeatercontrol">
+          <ul class="sys_itemslist">
+            <li class="sys_subitem sys_first sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_0_GenericList_Item_0_TitleLink"
+                title="Booths Bridge, Cheadle Lane, Plumley"
+                href="/highways_and_roads/roadworks/booths-bridge-cheadle-lane-plumley.aspx"
+                >Booths Bridge, Cheadle Lane, Plumley</a
+              >
+            </li>
+            <li class="sys_subitem sys_subalternatingitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_1_GenericList_Item_1_TitleLink"
+                title="Brook Street, Macclesfield – Footway closure"
+                href="/highways_and_roads/roadworks/brook-street-macclesfield-%e2%80%93-footway-closure.aspx"
+                >Brook Street, Macclesfield – Footway closure</a
+              >
+            </li>
+            <li class="sys_subitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_2_GenericList_Item_2_TitleLink"
+                title="Crewe highways works"
+                href="/highways_and_roads/roadworks/crewe-highways-works.aspx"
+                >Crewe highways works</a
+              >
+            </li>
+            <li class="sys_subitem sys_subalternatingitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_3_GenericList_Item_3_TitleLink"
+                title="Flood recovery - damaged roads"
+                href="/highways_and_roads/roadworks/flood-recovery-damaged-roads.aspx"
+                >Flood recovery - damaged roads</a
+              >
+            </li>
+            <li class="sys_subitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_4_GenericList_Item_4_TitleLink"
+                title="Footways"
+                href="/highways_and_roads/roadworks/footways.aspx"
+                >Footways</a
+              >
+            </li>
+            <li class="sys_subitem sys_subalternatingitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_5_GenericList_Item_5_TitleLink"
+                title="Gnat Hole Bridge, Adlington Road, Bollington"
+                href="/highways_and_roads/roadworks/gnat-hole-bridge-adlington-road-bollington.aspx"
+                >Gnat Hole Bridge, Adlington Road, Bollington</a
+              >
+            </li>
+            <li class="sys_subitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_6_GenericList_Item_6_TitleLink"
+                title="Hobson Street, Macclesfield – sinkhole repair works"
+                href="/highways_and_roads/roadworks/hobson-street-macclesfield-%e2%80%93-sinkhole-repair-works.aspx"
+                >Hobson Street, Macclesfield – sinkhole repair works</a
+              >
+            </li>
+            <li class="sys_subitem sys_subalternatingitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_7_GenericList_Item_7_TitleLink"
+                title="Maw Green Flood Risk"
+                href="/highways_and_roads/roadworks/maw-green-flood-risk.aspx"
+                >Maw Green Flood Risk</a
+              >
+            </li>
+            <li class="sys_subitem sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_8_GenericList_Item_8_TitleLink"
+                title="Mill Street Corridor, Crewe"
+                href="/highways_and_roads/roadworks/mill-street-corridor-crewe.aspx"
+                >Mill Street Corridor, Crewe</a
+              >
+            </li>
+            <li class="sys_subitem sys_subalternatingitem sys_16">
+              <a
+                id="GenericList_List_GenericList_List_9_GenericList_Item_9_TitleLink"
+                title="North West Crewe Package traffic management"
+                href="https://live-chesheast.cloud.contensis.com/highways_and_roads/roadworks/major-projects/north-west-crewe-package-nwcp/north-west-crewe-package-traffic-management.aspx"
+                >North West Crewe Package traffic management</a
+              >
+            </li>
+            <li class="sys_subitem sys_subalternatingitem sys_last sys_0 sys_t1056">
+              <a
+                id="GenericList_List_GenericList_List_11_GenericList_Item_11_TitleLink"
+                title="Swanley Canal, Nantwich - Bridge Repairs"
+                href="/highways_and_roads/roadworks/swanley-canal-nantwich-bridge-repairs.aspx"
+                >Swanley Canal, Nantwich - Bridge Repairs</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <h2>Contact Highways</h2>
+      <div class="cec-address" itemscope itemtype="http://schema.org/Organization">
+        <span itemprop="name" class="hidden">Highways - Cheshire East Council</span>
+        <a href="https://fixmystreet.cheshireeast.gov.uk/">Report a problem online</a>
+        <p>If you consider a highways issue to be dangerous, or an emergency:</p>
+
+        <p>
+          Call the Highways Customer Services Team on
+          <span itemprop="telephone">0300 123 5020 </span><br />during office hours
+          8:30am &ndash; 5:00pm
+        </p>
+
+        <p>
+          Call the Out of hours team on
+          <span itemprop="telephone">0300 123 5025 </span> <br />after 5pm and before
+          8:30am, including weekends.
+        </p>
+
+        <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+          <span>Highways</span><br />
+          <span itemprop="streetAddress"
+            >Floor 6 <br />
+            Delamere House</span
+          ><br />
+          <span itemprop="streetAddress">Delamere Street</span>
+          <span itemprop="addressLocality">Crewe</span><br />
+          <span itemprop="addressRegion">Cheshire</span><br />
+          <span itemprop="postalCode">CW1 2LL</span>
+        </div>
+      </div>
     </div>
     <%- feedback %>
     <%- footer %>
