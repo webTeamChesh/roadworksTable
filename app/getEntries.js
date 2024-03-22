@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
@@ -67,20 +67,21 @@ async function getEntries(req, res, password, user, url) {
     acc =
       i === links.length - 1
         ? `${acc}<li class="breadcrumb-item">${l}</li>`
-        : `${acc}<li class="breadcrumb-item"><a href="${classic.slice(0,i+1).join('').replace('//', '/')}">${l}</a></li>`;
+        : `${acc}<li class="breadcrumb-item"><a href="${classic
+            .slice(0, i + 1)
+            .join('')
+            .replace('//', '/')}">${l}</a></li>`;
     return acc;
   }, '');
-
-
   let bc = ejs.render(breadcrumb, { bc_inner });
 
   // get the XML
   let payload = await doFetch(user, password, url);
   let items = processArr(payload.items);
-  items.sort((a, b) => a.startDate - b.startDate)
-  
+  items.sort((a, b) => a.startDate - b.startDate);
+
   let date = payload.date;
-  const { btns, pages } = makePages([...items], pageSize);
+  const pages = makePages([...items], pageSize);
 
   // Create the app body by injecting the template.
   const appBody = ejs.render(appInner, { template: listTemplate });
@@ -88,7 +89,6 @@ async function getEntries(req, res, password, user, url) {
   // Use this to create script tags to be added in the head element.
   let head_end = ejs.render(appOuter, {
     appBody,
-    btns,
     items,
     date,
     pageSize,
@@ -97,12 +97,12 @@ async function getEntries(req, res, password, user, url) {
 
   // Create a function with the app body.
   const createListApp = new Function(
-    'date, items, pages, btns, pageSize, createSSRApp',
+    'date, items, pages,  pageSize, createSSRApp',
     appBody,
   );
 
   // Make an instance of that function, with the data we need.
-  const app = createListApp(date, items, pages, btns, pageSize, createSSRApp);
+  const app = createListApp(date, items, pages, pageSize, createSSRApp);
 
   // Render and send to client.
   renderToString(app).then((html) => {

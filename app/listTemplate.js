@@ -43,7 +43,6 @@ const listTemplate = `
       aria-labelledby="table-tab"
     >
       <div v-if="table">
-        <div v-else>
           <div v-if="!error">
             <p>This information was last updated on {{date}} at {{time}}.</p>
 
@@ -220,7 +219,6 @@ const listTemplate = `
                 </table>
               </div>
           </div>
-        </div>
       </div>
       <div v-if="!table" class="loc-map">
         <button class="cec-button" type="button" @click="showTable">
