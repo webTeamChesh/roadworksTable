@@ -1,7 +1,5 @@
 'use strict';
 
-import { watch } from 'vue';
-
 const dateOptions = {
   weekday: 'long',
   year: 'numeric',
