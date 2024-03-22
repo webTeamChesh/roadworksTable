@@ -14,7 +14,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 // Get the mongo password from the client secret.
-const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[0].slice(16)
+const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[1].slice(16);
 
 
 // Schemas & models
