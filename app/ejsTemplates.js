@@ -25,11 +25,9 @@ return createSSRApp({
             date: date,
             error: false,
             items: items,
-            loading: false,
             mapId: '',
             mapUrl: '',
-            pageBtns: btns ,
-            pageCount: btns.length ,
+            pageCount: pages.length ,
             pageIndex: 0,
             pageSize: pageSize,
             pages: pages,
@@ -227,8 +225,6 @@ return createSSRApp({
             this.copyItems = [...this.items];
             this.searchedItems = [...this.copyItems];
             this.filteredItems = [...this.copyItems];
-            this.calculatePages();
-            this.loading = false;
             this.start = this.items[0].startDate;
             this.end = this.items.reduce((acc, item) => {
               return item.endDate > acc ? item.endDate : acc;
@@ -364,10 +360,10 @@ const appOuter = `
 </script>
   <script type="module">
       import { createSSRApp } from 'vue';
-      function createApp(date,items, pages, btns, pageSize) {
+      function createApp(date,items, pages, pageSize) {
         <%- appBody %>
       }
-      createApp(<%- JSON.stringify(date) %>, <%- JSON.stringify(items) %>,  <%- JSON.stringify(pages) %>, <%- JSON.stringify(btns) %>, <%= pageSize %>).mount('#app');
+      createApp(<%- JSON.stringify(date) %>, <%- JSON.stringify(items) %>,  <%- JSON.stringify(pages) %>, <%= pageSize %>).mount('#app');
 </script>
 `;
 

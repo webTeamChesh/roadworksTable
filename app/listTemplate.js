@@ -43,9 +43,6 @@ const listTemplate = `
       aria-labelledby="table-tab"
     >
       <div v-if="table">
-        <div class="text-center" v-if="loading">
-          <span class="spinner-border"></span>
-        </div>
         <div v-else>
           <div v-if="!error">
             <p>This information was last updated on {{date}} at {{time}}.</p>
