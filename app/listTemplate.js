@@ -45,7 +45,6 @@ const listTemplate = `
       <div v-if="table">
           <div v-if="!error">
             <p>This information was last updated on {{date}} at {{time}}.</p>
-
               <div class="row">
                 <div class="input-group mb-3 content-type-search">
                   <label for="contentTypeSearchInput" class="sr-only"

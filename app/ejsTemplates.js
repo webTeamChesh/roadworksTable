@@ -20,11 +20,11 @@ return createSSRApp({
             dateEnd: undefined,
             start: undefined,
             end: undefined,
-            copyItems: [],
+            copyItems: items,
             currentPageIndex: 0,
             date: date,
             error: false,
-            items: items,
+            items: pages[0],
             mapId: '',
             mapUrl: '',
             pageCount: pages.length ,
@@ -221,12 +221,11 @@ return createSSRApp({
             let temp = new Date(this.date);
             this.date = temp.toLocaleDateString('en-GB');
             this.time = this.formatTime(temp);
-            this.items = this.addDates(this.items);
-            this.copyItems = [...this.items];
+            this.copyItems = this.addDates(this.copyItems);
             this.searchedItems = [...this.copyItems];
             this.filteredItems = [...this.copyItems];
-            this.start = this.items[0].startDate;
-            this.end = this.items.reduce((acc, item) => {
+            this.start = this.copyItems[0].startDate;
+            this.end = this.copyItems.reduce((acc, item) => {
               return item.endDate > acc ? item.endDate : acc;
             }, 0);
             this.start.setHours(0, 0, 0, 0);
