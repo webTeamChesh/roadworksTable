@@ -29,12 +29,23 @@ const pageSize = 20;
 async function getEntries(req, res, password, user, url) {
   const queries = req.url.split(/\?|&/);
   let entryId = queries.find((k) => k.startsWith('entryId'));
+  let api = queries.find((k) => k.startsWith('api'));
+
   // Abort if no entryID.
-  if (!entryId) {
+  if (!entryId && !api) {
     res.sendFile(path.join(dir, 'index.html'));
     return;
-  } else {
+  } else if (entryId){
     entryId = entryId.slice(8);
+  }
+
+  // get the XML
+  let payload = await doFetch(user, password, url);
+  let items = processArr(payload.items);
+  items.sort((a, b) => a.startDate - b.startDate);
+  let date = payload.date;
+  if (api) {
+    res.send(JSON.stringify({date, items}));
   }
 
   // Get the entry from the query string.
@@ -75,12 +86,6 @@ async function getEntries(req, res, password, user, url) {
   }, '');
   let bc = ejs.render(breadcrumb, { bc_inner });
 
-  // get the XML
-  let payload = await doFetch(user, password, url);
-  let items = processArr(payload.items);
-  items.sort((a, b) => a.startDate - b.startDate);
-
-  let date = payload.date;
   const pages = makePages([...items], pageSize);
 
   // Create the app body by injecting the template.
