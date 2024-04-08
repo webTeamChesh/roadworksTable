@@ -46,6 +46,7 @@ async function getEntries(req, res, password, user, url) {
   let date = payload.date;
   if (api) {
     res.send(JSON.stringify({date, items}));
+    return;
   }
 
   // Get the entry from the query string.
