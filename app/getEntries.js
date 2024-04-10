@@ -1,5 +1,4 @@
 'use strict';
-
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import fetch from 'node-fetch';
