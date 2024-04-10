@@ -43,9 +43,7 @@ async function doFetch(user, password, url) {
     })
     .then((text) => {
       let data;
-      data = JSON.parse(convert.xml2json(text, { compact: true, spaces: 4 }))[
-        'SOAP-ENV:Envelope'
-      ]['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
+      data = JSON.parse(convert.xml2json(text, { compact: true, spaces: 4 }))['SOAP-ENV:Envelope']['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
       let date = data.publicationTime._text;
       if (cache && cache.date === date) {
         console.log('Using cache.');
