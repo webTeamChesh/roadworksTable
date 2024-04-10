@@ -119,10 +119,6 @@ app.get(/.*\.(js|css)$/, (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  try {
-    getEntries(req, res, password, user, url);
-  } catch (err) {
-    sendEmail(transporter, new Date().toLocaleString('en-GB'), err, EMAIL, TO);
-    res.status(400).send();
-  }
+  getEntries(req, res, password, user, url, transporter, EMAIL, TO);
 });
+
