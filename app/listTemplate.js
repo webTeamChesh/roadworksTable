@@ -125,13 +125,13 @@ const listTemplate = `
                 role="navigation"
                 aria-label="Results data navigation"
               >
-                <ul class="pagination d-flex flex-wrap mb-2 ms-0">
+                <ul class="pagination  mb-2 ms-0">
                   <li
-                    class="page-item"
+                    class="page-item pe-2"
                     v-bind:class="{disabled: pageIndex===0}"
                   >
                     <button
-                      class="page-link rounded"
+                      class="page-link rounded me-0 mb-0"
                       type="button"
                       v-on:click="goToPage(pageIndex - 1)"
                     >
@@ -143,7 +143,7 @@ const listTemplate = `
                     v-bind:class="{disabled: pageIndex + 1 >=pageCount}"
                   >
                     <button
-                      class="page-link rounded"
+                      class="page-link rounded me-0 mb-0"
                       type="button"
                       v-on:click="goToPage(pageIndex + 1)"
                     >

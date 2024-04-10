@@ -1,5 +1,6 @@
 'use strict';
 
+
 const dateOptions = {
   weekday: 'long',
   year: 'numeric',

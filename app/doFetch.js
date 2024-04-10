@@ -1,4 +1,5 @@
 import convert from 'xml-js';
+
 let cache;
 const council = 'Cheshire East';
 
@@ -43,7 +44,9 @@ async function doFetch(user, password, url) {
     })
     .then((text) => {
       let data;
-      data = JSON.parse(convert.xml2json(text, { compact: true, spaces: 4 }))['SOAP-ENV:Envelope']['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
+      data = JSON.parse(convert.xml2json(text, { compact: true, spaces: 4 }))[
+        'SOAP-ENV:Envelope'
+      ]['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
       let date = data.publicationTime._text;
       if (cache && cache.date === date) {
         console.log('Using cache.');
@@ -61,6 +64,12 @@ async function doFetch(user, password, url) {
         cache = { date, items };
       }
       return cache;
+    })
+    .catch((err) => {
+      if (cache) {
+        return { err, ...cache };
+      }
+      return { err };
     });
 }
 

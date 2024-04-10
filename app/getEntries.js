@@ -1,5 +1,8 @@
 'use strict';
+
 import { createSSRApp } from 'vue';
+
+import { sendEmail } from './sendEmail.js';
 import { renderToString } from 'vue/server-renderer';
 import fetch from 'node-fetch';
 import path from 'path';
@@ -25,7 +28,16 @@ const ROOT_URL = `https://cms-chesheast.cloud.contensis.com/`;
 const PROJECT = 'website';
 const pageSize = 20;
 
-async function getEntries(req, res, password, user, url) {
+async function getEntries(
+  req,
+  res,
+  password,
+  user,
+  url,
+  transporter,
+  EMAIL,
+  TO,
+) {
   const queries = req.url.split(/\?|&/);
   let entryId = queries.find((k) => k.startsWith('entryId'));
   let api = queries.find((k) => k.startsWith('api'));
@@ -34,18 +46,29 @@ async function getEntries(req, res, password, user, url) {
   if (!entryId && !api) {
     res.sendFile(path.join(dir, 'index.html'));
     return;
-  } else if (entryId){
+  } else if (entryId) {
     entryId = entryId.slice(8);
   }
-
+  let items = [];
+  let date = "";
   // get the XML
   let payload = await doFetch(user, password, url);
-  let items = processArr(payload.items);
-  items.sort((a, b) => a.startDate - b.startDate);
-  let date = payload.date;
-  if (api) {
-    res.send(JSON.stringify({date, items}));
-    return;
+  if (payload.err) {
+    sendEmail(
+      transporter,
+      new Date().toLocaleString('en-GB'),
+      'error',
+      EMAIL,
+      TO,
+    );
+  } else if (payload.items) {
+    items = processArr(payload.items);
+    items.sort((a, b) => a.startDate - b.startDate);
+    date = payload.date;
+    if (api) {
+      res.send(JSON.stringify({ date, items }));
+      return;
+    }
   }
 
   // Get the entry from the query string.
@@ -105,7 +128,8 @@ async function getEntries(req, res, password, user, url) {
     'date, items, pages,  pageSize, createSSRApp',
     appBody,
   );
-
+console.log(date);
+  console.log(items)
   // Make an instance of that function, with the data we need.
   const app = createListApp(date, items, pages, pageSize, createSSRApp);
 
