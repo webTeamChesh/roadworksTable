@@ -1,5 +1,4 @@
 import convert from 'xml-js';
-
 let cache;
 const council = 'Cheshire East';
 
