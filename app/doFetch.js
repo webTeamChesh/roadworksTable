@@ -24,38 +24,32 @@ const initialCap = (str) => {
     : '';
 };
 
-// Function to fetch data from One Network.
 async function doFetch(user, password, url) {
   return fetch(url, {
     headers: {
-      Authorization: 'Basic ' + btoa(`${user}:${password}`),
-      'Content-Type': 'application/xml; charset=utf-8',
+      Authorization: "Basic " + btoa(`${user}:${password}`),
+      "Content-Type": "application/xml; charset=utf-8",
     },
   })
     .then((response) => {
       if (!response.ok) {
-        if (cache) {
-          return cache;
-        } else {
-          return false;
-        }
+        throw response;
       }
       return response.text();
     })
     .then((text) => {
-      let data;
-      data = JSON.parse(convert.xml2json(text, { compact: true, spaces: 4 }))[
-        'SOAP-ENV:Envelope'
-      ]['SOAP-ENV:Body'].d2LogicalModel.payloadPublication;
+      let data = JSON.parse(
+        convert.xml2json(text, { compact: true, spaces: 4 }),
+      )["SOAP-ENV:Envelope"]["SOAP-ENV:Body"].d2LogicalModel.payloadPublication;
       let date = data.publicationTime._text;
       if (cache && cache.date === date) {
-        console.log('Using cache.');
+        console.log("Using cache.");
       } else {
-        console.log(`Data updated: ${new Date(date).toLocaleString('en-GB')}`);
+        console.log(`Data updated: ${new Date(date).toLocaleString("en-GB")}`);
         let items = data.situation.reduce((acc, sit) => {
           let item = new Item(sit);
           let el = acc.find((e) => e.id === item.id);
-          if (!el && item.locations !== 'None') {
+          if (!el && item.locations !== "None") {
             acc.push(item);
           }
           return acc;
@@ -72,6 +66,7 @@ async function doFetch(user, password, url) {
       return { err };
     });
 }
+
 
 // Helper function to get location information.
 const loc = function (obj) {
