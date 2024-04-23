@@ -28,7 +28,7 @@ const listTemplate = `
         data-bs-target="#map"
         @click="toggleTabs"
       >
-        Map
+        Open map view
       </button>
     </li>
   </ul>
