@@ -39,6 +39,7 @@ return createSSRApp({
             showMyTable: true,
             table: true,
             time: '',
+            today: undefined,
             totalCount: items.length,
             timeOptions: {
               hour: 'numeric',
@@ -204,18 +205,19 @@ return createSSRApp({
             );
           },
           filter: function () {
-            let st = this.getUTCDate(new Date(this.dateStart + 'T00:00'));
+            console.log(this.dateStart);
+            let st = this.dateStart ? this.getUTCDate(new Date(this.dateStart + 'T00:00')) : this.start;
             let end = this.getUTCDate(new Date(this.dateEnd + 'T23:59:59'));
             this.filteredItems = this.copyItems.filter(
               (e) =>
-                this.getUTCDate(e.startDate) >= st &&
+                this.getUTCDate(e.startDate) >= st && 
                 this.getUTCDate(e.endDate) <= end,
             );
             this.search();
           },
           setPickers: function () {
-            this.dateStart = this.start.toLocaleDateString('en-CA');
             this.dateEnd = this.end.toLocaleDateString('en-CA');
+            this.dateStart = undefined;
           },
           getData: function () {
             if (!this.copyItems.length) {
@@ -228,6 +230,8 @@ return createSSRApp({
             this.copyItems = this.addDates(this.copyItems);
             this.searchedItems = [...this.copyItems];
             this.filteredItems = [...this.copyItems];
+            this.today = new Date();
+            this.today.setHours(0,0,0,0);
             this.start = this.copyItems[0].startDate;
             this.end = this.copyItems.reduce((acc, item) => {
               return item.endDate > acc ? item.endDate : acc;
