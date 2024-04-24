@@ -60,9 +60,7 @@ const listTemplate = `
                     aria-label="Search term"
                     id="contentTypeSearchInput"
                   />
-                  <label for="contentTypeSearchInput" class="hidden"
-                    >Search term</label
-                  >
+
                   <div class="input-group-append">
                     <button
                       v-if="searchTerm.length > 0"
