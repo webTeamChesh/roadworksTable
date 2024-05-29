@@ -1,0 +1,25 @@
+
+let cache;
+
+
+async function doFetch() {
+	console.log("Doing a fetch.");
+	const response = await $fetch("https://www.cheshireeast.gov.uk/cec-api/roadworkstable?api=true");
+	let data = JSON.parse(response);
+	if (data.items && data.date) {
+		cache = { err: null, items: data.items, date: data.date };
+	}
+	else {
+		cache = { ...cache, err };
+	}
+
+}
+
+setInterval(doFetch, 5 * 60 * 1000);
+
+export default defineEventHandler(async (event) => {
+	if (!cache) {
+		await doFetch();
+	}
+	return JSON.stringify(cache);
+});
