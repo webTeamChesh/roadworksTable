@@ -13,6 +13,7 @@
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
     "cec-vue-lib": "^1.2.6",
     "contensis-delivery-api": "^1.4.0",
+    "mongoose": "^8.4.0",
     "nuxt": "^3.11.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",

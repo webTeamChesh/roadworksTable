@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const client = useClient();
-const query = useRoute().query;
 const makePages = useMakePages();
+const query = useRoute().query;
 
 // Set up some state.
 const bottom = useState('bottom', () => '');
@@ -89,34 +89,36 @@ if (payload.error) {
 } else {
   date.value = new Date(payload.date).toLocaleDateString('en-GB');
   time.value = formatTime(new Date(payload.date));
-  items.value = payload.items;
+  items.value = payload.items || [];
 }
 
 // Set up the initial state of the page.
-items.value.forEach((item, i) => {
-  item.index = i;
-  try {
-    item.startDate = new Date(item.startDate);
-    item.endDate = new Date(item.endDate);
-    item.startDateString = item.startDate.toLocaleDateString('en-GB');
-    item.endDateString = item.endDate.toLocaleDateString('en-GB');
-  } catch (err) {
-    console.log('Invalid date');
-  }
-});
-
-items.value.sort((a, b) => a.startDate - b.startDate);
-searchedItems.value = [...items.value];
-filteredItems.value = [...items.value];
-
-// Set up dates.
-start.value = items.value[0].startDate;
-end.value = items.value.reduce((acc, item) => {
-  return item.endDate > acc ? item.endDate : acc;
-}, 0);
-start.value.setHours(0, 0, 0, 0);
-end.value.setHours(23, 59, 59, 999);
-dateEnd.value = end.value.toLocaleDateString('en-CA');
+if (items.value.length) {
+  items.value.forEach((item, i) => {
+    item.index = i;
+    try {
+      item.startDate = new Date(item.startDate);
+      item.endDate = new Date(item.endDate);
+      item.startDateString = item.startDate.toLocaleDateString('en-GB');
+      item.endDateString = item.endDate.toLocaleDateString('en-GB');
+    } catch (err) {
+      console.log('Invalid date');
+    }
+  });
+  items.value.sort((a, b) => a.startDate - b.startDate);
+  searchedItems.value = [...items.value];
+  filteredItems.value = [...items.value];
+  // Set up dates.
+  start.value = items.value[0].startDate;
+  end.value = items.value.reduce((acc, item) => {
+    return item.endDate > acc ? item.endDate : acc;
+  }, 0);
+  start.value.setHours(0, 0, 0, 0);
+  end.value.setHours(23, 59, 59, 999);
+  dateEnd.value = end.value.toLocaleDateString('en-CA');
+} else {
+  error.value = true;
+}
 
 // Create initial pages.
 pages.value = makePages(items.value, pageSize.value);

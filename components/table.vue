@@ -3,41 +3,54 @@ const fields = [
   {
     id: 'locations',
     display: 'Location',
-    sort: ((a, b) => {
-      return a.locations === b.locations ? 0 : a.locations < b.locations ? -1 : 1;
-    })
+    sort: (a, b) => {
+      return a.locations === b.locations
+        ? 0
+        : a.locations < b.locations
+          ? -1
+          : 1;
+    },
   },
   {
     id: 'description',
     display: 'Description',
-    sort: ((a, b) => {
-      return a.description === b.description ? 0 : a.description < b.description ? -1 : 1;
-    })
+    sort: (a, b) => {
+      return a.description === b.description
+        ? 0
+        : a.description < b.description
+          ? -1
+          : 1;
+    },
   },
   {
-    id: 'startDate', display: 'Start date',
-    sort: ((a, b) => {
+    id: 'startDate',
+    display: 'Start date',
+    sort: (a, b) => {
       return a.startDate - b.startDate;
-    }),
+    },
   },
   {
-    id: 'endDate', display: 'End date',
-    sort: ((a, b) => {
+    id: 'endDate',
+    display: 'End date',
+    sort: (a, b) => {
       return a.endDate - b.endDate;
-    }),
+    },
   },
   {
     id: 'responsible',
     display: 'Responsibility',
-    sort: ((a, b) => {
-      return a.responsible === b.responsible ? 0 : a.responsible < b.responsible ? -1 : 1;
-    })
+    sort: (a, b) => {
+      return a.responsible === b.responsible
+        ? 0
+        : a.responsible < b.responsible
+          ? -1
+          : 1;
+    },
   },
 ];
 
-const pageIndex = useState("pageIndex");
+const pageIndex = useState('pageIndex');
 const pages = useState('pages');
-
 
 const resetIcons = () => {
   fields.forEach((obj) => {
@@ -74,8 +87,7 @@ onMounted(() => {
     e.elem = document.getElementById(e.id);
     setUpHeaders(e);
   });
-})
-
+});
 </script>
 
 <template>
@@ -90,14 +102,25 @@ onMounted(() => {
             </caption>
             <thead>
               <tr>
-                <th v-for="obj in fields" tabindex="0" :key="obj.id" scope="col" @click="sortByField(obj)" :id="obj.id"
-                  class="tableHead p-0 align-middle">
+                <th
+                  v-for="obj in fields"
+                  tabindex="0"
+                  :key="obj.id"
+                  scope="col"
+                  @click="sortByField(obj)"
+                  :id="obj.id"
+                  class="tableHead p-0 align-middle"
+                >
                   <div class="container ps-2">
                     <div class="row align-items-center">
                       <div class="col-11 pt-1">{{ obj.display }}</div>
                       <div class="col-1 p-0">
-                        <span class="hmoUpIcon" :id="'up' + obj.id">&#9650;</span>
-                        <span class="hmoDownIcon" :id="'down' + obj.id">&#9660;</span>
+                        <span class="hmoUpIcon" :id="'up' + obj.id"
+                          >&#9650;</span
+                        >
+                        <span class="hmoDownIcon" :id="'down' + obj.id"
+                          >&#9660;</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -110,11 +133,19 @@ onMounted(() => {
                   <ul class="my-0">
                     <template v-for="l in item.locations.split('^#')">
                       <li v-if="l !== 'None'">
-                        <RouterLink :to="item.id">{{ l }}</RouterLink>
+                        <RouterLink :to="item.id"
+                          >{{ l
+                          }}<span class="hidden">{{
+                            item.id
+                          }}</span></RouterLink
+                        >
                       </li>
                     </template>
                   </ul>
-                  <p class="mt-2 mb-0 ps-1" :class="{ 'text-danger': item.severity === 'High' }">
+                  <p
+                    class="mt-2 mb-0 ps-1"
+                    :class="{ 'text-danger': item.severity === 'High' }"
+                  >
                     Impact: {{ item.severity }}
                   </p>
                 </td>

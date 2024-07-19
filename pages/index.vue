@@ -188,6 +188,7 @@ onMounted(() => {
               <p>Nothing to display at present. Try again in a few minutes.</p>
             </div>
             <div
+              v-else
               id="table"
               class="mt-3 tab-pane fade show active"
               role="tabpanel"

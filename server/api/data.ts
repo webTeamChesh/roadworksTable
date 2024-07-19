@@ -1,9 +1,58 @@
+
 import convert from "xml-js";
-let cache = { error: false };
-const council = "Cheshire East";
+import mongoose from "mongoose";
+
+// // Get the mongo password from the client secret.
+// const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[1].slice(16);
+//
+// // Schemas & models
+// const authSchema = new mongoose.Schema({
+// 	pwd: {
+// 		required: true,
+// 		type: String,
+// 	},
+// 	api: {
+// 		type: String,
+// 	},
+// 	user: {
+// 		type: String,
+// 	},
+// });
+
+// const Auth = mongoose.model("Auth", authSchema);
+// const mongoString = `mongodb+srv://marktranter:${mongoPwd}@cluster0.7moof0m.mongodb.net/`;
+// mongoose.connect(mongoString);
+// const db = mongoose.connection;
+// db.on("error", (error) => {
+// 	console.log(error);
+// });
+
+// To be populated from mongo.
+let password = 'Tkfdg58F]pjA';
 let url = 'https://datacloud.one.network/?app_key=94db72b2-058e-2caf-94de16536c81'
-let user = 'cheshireeast'
-let password = 'Tkfdg58F]pjA'
+	;
+let user = 'cheshireeast';
+
+// db.once("connected", () => {
+// 	console.log("Database connected");
+// 	Auth.findOne({ _id: "65f847f55e20aec8afd5c5f6" }).then((auth) => {
+// 		password = auth.pwd;
+// 		user = auth.user;
+// 		url = `https://datacloud.one.network/?app_key=${auth.api}`;
+// 		sendEmail("Server up.");
+// 		doFetch();
+// 		setInterval(doFetch, 5 * 60 * 1000);
+// 	});
+//
+// })
+
+
+let cache = { error: false, date: undefined, items: [] };
+const council = "Cheshire East";
+
+sendEmail("Server up.");
+doFetch();
+setInterval(doFetch, 5 * 60 * 1000);
 
 function sendEmail(error) {
 	const body = {
@@ -47,6 +96,7 @@ const initialCap = (str) => {
 
 async function doFetch() {
 	let soap;
+	let myItems = [];
 	try {
 		const data = await $fetch(url, {
 			headers: {
@@ -62,34 +112,46 @@ async function doFetch() {
 			console.log('Using cache.');
 		} else {
 			console.log(`Data updated: ${new Date(date).toLocaleString('en-GB')}`);
-			let items = soap.situation.reduce((acc, sit) => {
+			soap.situation.forEach(sit => {
 				let item = new Item(sit);
-				let el = acc.find((e) => e.id === item.id);
+				let el = myItems.find((e) => e.id === item.id);
 				if (!el) {
-					acc.push(item);
+					myItems.push(item);
 				}
-				return acc;
-			}, []);
-			// Update cache.
-			cache = { error: false, date, items };
+			});
+
+			console.log("date");
+			cache = makeCache(false, date, myItems);
+			console.log(cache.date);
 		}
 	} catch (err) {
+		console.log(err);
 		if (!cache) {
-			cache = { error: true };
+			cache = makeCache(true, undefined, []);
 			sendEmail("Nothing in cache");
 		}
 	}
 }
 
+const makeCache = (error, date, items) => {
+	return { error: error, date: date, items: items };
+}
+
 const getLoc = (name) => {
-	let loc = ["None"];
-	if (name[0]) {
-		loc[0] = name[0].descriptor.values.value._text;
+	let other = name.find(e => e.tpegOtherPointDescriptorType._text === 'other');
+	let area = name.find(e => e.tpegOtherPointDescriptorType._text === 'areaName');
+	let linkName = name.find(e => e.tpegOtherPointDescriptorType._text === 'linkName');
+	if (other) {
+		return [other.descriptor.values.value._text];
 	}
-	if (name[0] && name[2]) {
-		loc[0] = `${loc[0]}, ${name[2].descriptor.values.value._text.replace('ward', '').trim()}`
+	if (linkName) {
+		let loc = [linkName.descriptor.values.value._text];
+		if (area) {
+			loc[0] = `${loc[0]}, ${area.descriptor.values.value._text.replace('Ward', '').trim()}`;
+		}
+		return loc;
 	}
-	return loc;
+	return ["None"];
 };
 
 // Helper function to get location information.
@@ -100,9 +162,9 @@ const loc = function(obj) {
 	let linear = group?.tpegLinearLocation;
 	if (tpeg) {
 		return getLoc(tpeg);
-	} else if (itinerary) {
+	} else if (itinerary && itinerary[0].location.tpegPointLocation.point.name) {
 		return getLoc(itinerary[0].location.tpegPointLocation.point.name);
-	} else if (linear) {
+	} else if (linear && linear.from.name) {
 		return getLoc(linear.from.name);
 	} else {
 		return ['None'];
@@ -151,10 +213,6 @@ const Details = function(obj) {
 		obj.situationRecordExtension.situationRecordExtended.worksState?.description
 			._text || "";
 };
-
-sendEmail("Server up.");
-doFetch();
-setInterval(doFetch, 5 * 60 * 1000);
 
 export default defineEventHandler(async (event) => {
 	if (!cache) {

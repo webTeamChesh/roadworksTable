@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     accessToken: process.env.accessToken,
     alias: process.env.alias,
     projectId: process.env.projectId,
+    CONTENSIS_CLIENT_SECRET: process.env.CONTENSIS_CLIENT_SECRET,
     public: {
       gtm: {
         id: 'GTM-5ZQX9F',
@@ -13,6 +14,13 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'en'
+      },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
       link: [
         { rel: 'icon', type: 'image/png', href: 'favicon.png' },
         {
