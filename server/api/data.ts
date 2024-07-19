@@ -1,6 +1,7 @@
 
 import convert from "xml-js";
-import mongoose from "mongoose";
+process.on('warning', (warning) => console.warn(warning.stack))
+//import mongoose from "mongoose";
 
 // // Get the mongo password from the client secret.
 // const mongoPwd = process.env.CONTENSIS_CLIENT_SECRET.split('-')[1].slice(16);
@@ -120,9 +121,7 @@ async function doFetch() {
 				}
 			});
 
-			console.log("date");
 			cache = makeCache(false, date, myItems);
-			console.log(cache.date);
 		}
 	} catch (err) {
 		console.log(err);
